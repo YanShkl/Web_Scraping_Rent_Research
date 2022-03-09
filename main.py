@@ -3,11 +3,17 @@ import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+import pandas as pd
 import time
 
 # Variables what drives while loop
 codeRun = True
 looping_count = 1
+
+# Creating empty DataFrame
+df = pd.DataFrame(columns=["What's the id of the property?", "What's the address of the property?",
+                           "What is the area of the property?", "What's the price per month/day?",
+                           "What's the link to the property?"])
 
 while codeRun:
 
@@ -28,7 +34,6 @@ while codeRun:
     response.raise_for_status()
 
     print(response.status_code)
-
 
     # Detect if all pages are scraped
     if response.history:
@@ -52,11 +57,17 @@ while codeRun:
 
     # Selecting and adding data to lists
     for listing in cleaned_data:
+
+        try:
+            link = 'https://www.ss.lv' + listing.find('a')['href']
+            list_of_links.append(link)
+        except TypeError:
+            print('All pages are Scraped')
+            codeRun = False
+            break
+
         id = listing.get('id')
         list_of_ids.append(id)
-
-        link = 'https://www.ss.lv' + listing.find('a')['href']
-        list_of_links.append(link)
 
         address = listing.find(class_='msga2-o pp6').text
         list_of_addresses.append(address)
@@ -66,6 +77,21 @@ while codeRun:
 
         price = listing.find_all(class_='msga2-o pp6')[6].text
         list_of_prices.append(price)
+
+    # time.sleep(1)
+
+    xtra = {"What's the id of the property?": list_of_ids,
+            "What's the address of the property?": list_of_addresses,
+            "What is the area of the property?": list_of_m2,
+            "What's the price per month/day?": list_of_prices,
+            "What's the link to the property?": list_of_links
+            }
+
+    current_df = pd.DataFrame(xtra)
+
+    # df = df.append(pd.DataFrame(xtra))
+    df = pd.concat([df, current_df], ignore_index=True, axis=0)
+    df.to_csv('SS.LV Research Data', index=False)
 
     # Selenium Working Area
 
