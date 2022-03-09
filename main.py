@@ -17,7 +17,7 @@ df = pd.DataFrame(columns=["What's the id of the property?", "What's the address
 
 while codeRun:
 
-    # If statement allows check scraping availability
+    # 'If' statement allows to iterate through pages
     if looping_count == 1:
         link = 'https://www.ss.lv/en/real-estate/flats/riga/centre/today-5/hand_over/'
         looping_count += 1
