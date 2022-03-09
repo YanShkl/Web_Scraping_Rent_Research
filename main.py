@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import time
 
-# Variables
+# Variables what drives while loop
 codeRun = True
 looping_count = 1
 
