@@ -17,7 +17,7 @@ df = pd.DataFrame(columns=["What's the id of the property?", "What's the address
 
 while codeRun:
 
-    # If statement allows to drive page to scrap
+    # If statement allows check scraping availability
     if looping_count == 1:
         link = 'https://www.ss.lv/en/real-estate/flats/riga/centre/today-5/hand_over/'
         looping_count += 1
@@ -58,6 +58,8 @@ while codeRun:
     # Selecting and adding data to lists
     for listing in cleaned_data:
 
+        # Checking page for fullness
+
         try:
             link = 'https://www.ss.lv' + listing.find('a')['href']
             list_of_links.append(link)
@@ -78,7 +80,7 @@ while codeRun:
         price = listing.find_all(class_='msga2-o pp6')[6].text
         list_of_prices.append(price)
 
-    # time.sleep(1)
+    time.sleep(0.1)
 
     xtra = {"What's the id of the property?": list_of_ids,
             "What's the address of the property?": list_of_addresses,
@@ -89,7 +91,6 @@ while codeRun:
 
     current_df = pd.DataFrame(xtra)
 
-    # df = df.append(pd.DataFrame(xtra))
     df = pd.concat([df, current_df], ignore_index=True, axis=0)
     df.to_csv('SS.LV Research Data', index=False)
 
